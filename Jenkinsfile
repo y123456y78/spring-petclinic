@@ -29,6 +29,13 @@ pipeline {
                     -D sonar.java.binaries=target/classes"
                 }
             }
+        }
+
+        stage("Ansible Deployment") {
+            agent any
+            steps {
+                ansiblePlaybook credentialsId: 'ansible-target', disableHostKeyChecking: true, installation: 'ansible', inventory: 'deploy.inv', playbook: 'deploy.yml'
+            }
         }  
     }
 }

@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  tasks: 
+  - name: Install Java
+    apt:
+      name: openjdk-17-jdk
+      state: present
+      update_cache: yes
+    tags:
+      - java
+
+  - name: Copy Petclinc Jar
+    copy:
+      src=/var/jenkins_home/workspace/devops-a1/target/spring-petclinic-3.0.0-SNAPSHOT.jar
+      dest=/home/user/spring-petclinic-3.0.0-SNAPSHOT.jar
+      owner=user
+      group=user
+      mode=0644
+    tags:
+      - deploy
+
+  - name: Deploy Petclinc
+    shell: 
+      nohup java -jar /home/user/spring-petclinic-3.0.0-SNAPSHOT.jar &
+    tags:
+      - deploy
